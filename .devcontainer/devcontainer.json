@@ -1,0 +1,9 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile.dev"
+  },
+  "extensions": [
+    "ms-vscode.cpptools",    // For C++ development
+    "ms-vscode.cmake-tools"  // If you use CMake
+  ],
+}
