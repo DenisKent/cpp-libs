@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/devcontainers/universal:2
+
+# Install GCC or Clang with C++20 support
+RUN apt-get update && \
+    apt-get install -y g++ && \
+    g++ --version
