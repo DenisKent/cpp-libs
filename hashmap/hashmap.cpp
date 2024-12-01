@@ -1,38 +1,67 @@
-#include <array>
-#include <functional>
 #include <iostream>
 #include <string>
+#include "./hashmap.h"
 
-constexpr std::size_t TABLESIZE{10};
 constexpr std::hash<std::string> hasher;
 
-class Hashmap
-{
-public:
-  std::string get(std::string key) { return "hey"; }
-  void set(std::string key, std::string value)
-  {
-    const int hash = hasher(key);
-    std::cout << static_cast<std::size_t>(-1);
-    const std::size_t hashIndex = static_cast<std::size_t>(hash) % TABLESIZE; // TODO 
-    m_table.at(hashIndex) = value;
-    return;
-  }
-  void print()
-  {
-    std::cout << "{" << '\n';
-    for (auto value : m_table)
-    {
-      if (!value.empty())
-      {
-        std::cout << "   " << value << ":" << "" << '\n';
-      }
-    }
-    std::cout << "}" << '\n';
-  }
+Hashmap::Hashmap() {
+  //
+};
 
-private:
-  std::array<std::string, TABLESIZE> m_table{};
+Hashmap::~Hashmap()
+{
+  for (auto row : m_table)
+  {
+    delete row;
+  }
+}
+std::string Hashmap::get(std::string key)
+{
+  const std::size_t hashIndex = getKeyHashIndex(key);
+  Node *row = m_table.at(hashIndex);
+  if (row == nullptr)
+  {
+    return "";
+  }
+  else
+  {
+    return row->value;
+  }
+};
+
+void Hashmap::set(std::string key, std::string value)
+{
+  const std::size_t hashIndex = getKeyHashIndex(key);
+  Node *row = m_table.at(hashIndex);
+  if (row == nullptr)
+  {
+    m_table.at(hashIndex) = new Node{key, value};
+  }
+  else
+  {
+    m_table.at(hashIndex)->key = key;
+    m_table.at(hashIndex)->value = value;
+  }
+};
+
+void Hashmap::print()
+{
+  std::cout << "{" << '\n';
+  for (auto row : m_table)
+  {
+    if (row != nullptr)
+    {
+      std::cout << "   " << row->key << ":" << row->value << '\n';
+    }
+  }
+  std::cout << "}" << '\n';
+};
+
+std::size_t Hashmap::getKeyHashIndex(const std::string &key)
+{
+  const int hash = hasher(key);
+  const std::size_t hashIndex = static_cast<std::size_t>(hash) % TABLESIZE;
+  return hashIndex;
 };
 
 int main()
@@ -40,6 +69,10 @@ int main()
   Hashmap myHash{};
   myHash.set("key1", "value1");
   myHash.set("key2", "value2");
+  myHash.set("key2", "value3");
   myHash.print();
+  std::cout << myHash.get("key1") << '\n';
+  std::cout << myHash.get("not_a_key1") << '\n';
+
   return EXIT_SUCCESS;
 }
