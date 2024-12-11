@@ -63,16 +63,3 @@ std::size_t Hashmap::getKeyHashIndex(const std::string &key)
   const std::size_t hashIndex = static_cast<std::size_t>(hash) % TABLESIZE;
   return hashIndex;
 };
-
-int main()
-{
-  Hashmap myHash{};
-  myHash.set("key1", "value1");
-  myHash.set("key2", "value2");
-  myHash.set("key2", "value3");
-  myHash.print();
-  std::cout << myHash.get("key1") << '\n';
-  std::cout << myHash.get("not_a_key1") << '\n';
-
-  return EXIT_SUCCESS;
-}
