@@ -4,17 +4,6 @@
 
 constexpr std::hash<std::string> hasher;
 
-Hashmap::Hashmap() {
-  //
-};
-
-Hashmap::~Hashmap()
-{
-  for (auto row : m_table)
-  {
-    delete row;
-  }
-}
 std::string Hashmap::get(std::string key)
 {
   const std::size_t hashIndex = getKeyHashIndex(key);
@@ -60,6 +49,6 @@ void Hashmap::print()
 std::size_t Hashmap::getKeyHashIndex(const std::string &key)
 {
   const int hash = hasher(key);
-  const std::size_t hashIndex = static_cast<std::size_t>(hash) % TABLESIZE;
+  const std::size_t hashIndex = static_cast<std::size_t>(hash) % m_tableSize;
   return hashIndex;
 };

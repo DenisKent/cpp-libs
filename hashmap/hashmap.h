@@ -1,11 +1,18 @@
 #include <string>
 #include <array>
+#include <vector>
 
 class Hashmap
 {
 public:
-  Hashmap();
-  ~Hashmap();
+  Hashmap(std::size_t tableSize) : m_tableSize{tableSize}, m_table{tableSize} {};
+  ~Hashmap()
+  {
+    for (auto row : m_table)
+    {
+      delete row;
+    }
+  };
 
   std::string get(std::string key);
   void set(std::string key, std::string value);
@@ -17,7 +24,7 @@ private:
     std::string key{};
     std::string value{};
   };
-  static constexpr std::size_t TABLESIZE{10};
-  std::array<Node *, TABLESIZE> m_table{};
+  const std::size_t m_tableSize{};
+  std::vector<Node *> m_table{m_tableSize};
   std::size_t getKeyHashIndex(const std::string &key);
 };

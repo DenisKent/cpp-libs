@@ -6,9 +6,9 @@
 #include <functional>
 #include <vector>
 
-const auto red{"\033[31m"};
-const auto green{"\033[32m"};
-const auto blue{"\033[34m"};
+const std::string red{"\033[31m"};
+const std::string green{"\033[32m"};
+const std::string blue{"\033[34m"};
 
 class SimpleTest
 {
@@ -35,7 +35,7 @@ public:
             }
             catch (const std::exception &e)
             {
-                std::cerr << red << "[FAIL] " << name << ": " << e.what() << "\n";
+                std::cerr << red << "[FAIL] " << name << "\n" << e.what() << "\n";
                 failed++;
             }
             catch (...)
@@ -62,9 +62,9 @@ private:
     if (!(condition))          \
     throw std::runtime_error("Assertion failed: " #condition)
 
-#define ASSERT_EQ(expected, actual) \
+#define ASSERT_EQ(actual, expected) \
     if ((expected) != (actual))     \
-    throw std::runtime_error("Assertion failed: " #expected " == " #actual)
+    throw std::runtime_error("Assertion failed: " #expected " == " #actual "\nRecieved: " + static_cast<std::string>(expected) + " == " + static_cast<std::string>(actual))
 
 #define ADD_TEST(name, func) \
     SimpleTest::add_test(name, func)
