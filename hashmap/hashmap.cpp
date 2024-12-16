@@ -1,35 +1,60 @@
 #include <iostream>
 #include <string>
+#include <optional>
 #include "./hashmap.h"
 
 constexpr std::hash<std::string> hasher;
 
-std::string Hashmap::get(std::string key)
+/**
+ * When we get, we must be aware of three states:
+ * 1. nullptr
+ * 2. Vector with value in it
+ * 3. Vector without value in it
+ */
+std::optional<std::string> Hashmap::get(std::string key)
 {
   const std::size_t hashIndex = getKeyHashIndex(key);
-  Node *row = m_table.at(hashIndex);
+  std::vector<Node> *row = m_table.at(hashIndex);
   if (row == nullptr)
   {
-    return "";
+    return std::nullopt;
   }
-  else
+
+  for (auto &node : *row)
   {
-    return row->value;
+    if (node.key == key)
+    {
+      return node.value;
+    }
   }
+  return std::nullopt;
 };
 
+/**
+ * When we set, we have three scenarios:
+ * 1. There is not a vector in place
+ * 2. There is a vector in place and the key exists
+ * 3. There is a vector in place and the key does not exist
+ */
 void Hashmap::set(std::string key, std::string value)
 {
   const std::size_t hashIndex = getKeyHashIndex(key);
-  Node *row = m_table.at(hashIndex);
+  std::vector<Node> *row = m_table.at(hashIndex);
   if (row == nullptr)
   {
-    m_table.at(hashIndex) = new Node{key, value};
+    m_table.at(hashIndex) = new std::vector{Node{key, value}};
   }
   else
   {
-    m_table.at(hashIndex)->key = key;
-    m_table.at(hashIndex)->value = value;
+    for (auto &node : *row)
+    {
+      if (node.key == key)
+      {
+        node.value = value;
+        return;
+      }
+    }
+    m_table.at(hashIndex)->push_back(Node{key, value});
   }
 };
 
@@ -40,7 +65,10 @@ void Hashmap::print()
   {
     if (row != nullptr)
     {
-      std::cout << "   " << row->key << ":" << row->value << '\n';
+      for (auto const &node : *row)
+      {
+        std::cout << "   " << node.key << ":" << node.value << '\n';
+      }
     }
   }
   std::cout << "}" << '\n';
