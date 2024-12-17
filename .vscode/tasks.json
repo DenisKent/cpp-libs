@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build hashmap_debug",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "-B",
+                "hashmap_debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/hashmap"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Generated task for building the hashmap_debug."
+        }
+    ]
+}
